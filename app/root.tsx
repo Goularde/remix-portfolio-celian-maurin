@@ -1,12 +1,13 @@
 import {
   Links,
   Meta,
+  NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
-
+import classNames from "classnames";
 import "./tailwind.css";
 
 export const links: LinksFunction = () => [
@@ -24,7 +25,7 @@ export const links: LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -41,5 +42,40 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-10 bg-background h-12 ">
+        <ul className="flex items-center justify-center text-xl gap-2">
+          <AppNavLink to="">Projets</AppNavLink>
+          <AppNavLink to="contact">Contact</AppNavLink>
+          <AppNavLink to="dashboard">Dashboard</AppNavLink>
+        </ul>
+      </nav>
+      <div className="pt-12 w-full">
+        <Outlet />
+      </div>
+    </>
+  );
 }
+
+type AppNavLinkProps = {
+  to: string;
+  children: React.ReactNode;
+};
+
+const AppNavLink = ({ to, children }: AppNavLinkProps) => {
+  return (
+    <li className="p-2 rounded-md">
+      <NavLink
+        to={to}
+        className={({ isActive }) =>
+          classNames("text-gray-500 hover:text-gray-300 ", {
+            "text-white": isActive,
+          })
+        }
+      >
+        {children}
+      </NavLink>
+    </li>
+  );
+};
