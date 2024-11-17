@@ -5,11 +5,16 @@ import { RotateCcw, X } from "lucide-react";
 type EditableTagProps = {
   tagName: string;
   color: string;
-  id: string;
+  tagId: string;
+  projectId: string;
 };
 
-const EditableTag = ({ tagName, color, id }: EditableTagProps) => {
-  const updateTagFetcher = useFetcher();
+const EditableTag = ({
+  tagName,
+  color,
+  tagId,
+  projectId,
+}: EditableTagProps) => {
   const deleteTagFetcher = useFetcher();
   const isDeleteting =
     deleteTagFetcher.formData?.get("_action") === "deleteTag";
@@ -27,30 +32,18 @@ const EditableTag = ({ tagName, color, id }: EditableTagProps) => {
         className="h-3 w-3 rounded-full"
         style={{ backgroundColor: color }}
       />
-      <updateTagFetcher.Form
-        onChange={() => {
-          updateTagFetcher.submit(
-            {
-              _action: "updateTag",
-              tagName: "oiui",
-              tagColor: color,
-              tagId: id,
-            },
-            { method: "PUT", action: "/dashboard/form" }
-          );
-        }}
-      >
-        <input
-          required
-          type="text"
-          name="tagName"
-          className="text-xs leading-3 bg-transparent max-w-16  outline-2 outline-primary"
-          defaultValue={tagName}
-        />
-      </updateTagFetcher.Form>
+
+      <input type="hidden" name="tagId" value={tagId} />
+      <input
+        required
+        type="text"
+        name="tagName"
+        className="text-xs leading-3 bg-transparent max-w-16  outline-2 outline-primary"
+        defaultValue={tagName}
+      />
       <deleteTagFetcher.Form
         method="DELETE"
-        action="/dashboard/form"
+        action={`/dashboard/${projectId}`}
         aria-label={isFailedDeletion ? "Retry" : "Delete"}
         onSubmit={(e) => {
           if (!confirm("Are you sure you want to delete this shelf?")) {
@@ -58,8 +51,8 @@ const EditableTag = ({ tagName, color, id }: EditableTagProps) => {
           }
         }}
       >
+        <input type="hidden" name="tagId" value={tagId} />
         <button type="submit" name="_action" value="deleteTag">
-          <input type="hidden" name="tagId" value={id} />
           {isFailedDeletion ? <RotateCcw size={12} /> : <X size={12} />}
         </button>
       </deleteTagFetcher.Form>

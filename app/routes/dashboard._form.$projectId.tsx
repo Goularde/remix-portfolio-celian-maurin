@@ -13,6 +13,17 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
+  const formatTags = () => {
+    const tagIds = formData.getAll("tagId") as string[];
+    const tagNames = formData.getAll("tagName") as string[];
+    return tagIds.map((id, index) => {
+      return {
+        id,
+        name: tagNames[index],
+      };
+    });
+  };
+  const tags = formatTags();
   const projectId = formData.get("projectId");
   const projectName = formData.get("projectName");
   const projectDescription = formData.get("projectDescription");
@@ -24,11 +35,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         typeof projectName === "string" &&
         typeof projectDescription === "string"
       ) {
-        return updateProject(projectId, projectName, projectDescription).then(
-          () => redirect(`/dashboard`)
-        );
+        return updateProject(
+          projectId,
+          projectName,
+          projectDescription,
+          tags
+        ).then(() => redirect(`/dashboard`));
       }
-      return json(null);
+      return json("type error on inputs", { status: 400 });
     }
     case "deleteTag": {
       try {

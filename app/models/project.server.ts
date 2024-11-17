@@ -3,8 +3,22 @@ import db from "~/db.server";
 export const updateProject = async (
   projectId: string,
   projectName: string,
-  projectDescription: string
+  projectDescription: string,
+  tags: {
+    id: string;
+    name: string;
+  }[]
 ) => {
+  tags.forEach(async (tag) => {
+    await db.tag.update({
+      where: {
+        id: tag.id,
+      },
+      data: {
+        name: tag.name,
+      },
+    });
+  });
   return db.project.update({
     where: {
       id: projectId,
