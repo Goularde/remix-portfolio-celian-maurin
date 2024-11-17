@@ -1,15 +1,8 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/react";
+import { json, redirect, useLoaderData } from "@remix-run/react";
+import EditableProjectCard from "~/components/EditableProject";
 import { getProject, updateProject } from "~/models/project.server";
 import { createTag, deleteTag } from "~/models/tag.server";
-
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-  if (!params.projectId) {
-    return redirect("/dashboard");
-  }
-  const project = await getProject(params.projectId);
-  return json({ project });
-};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -65,7 +58,29 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json("No _action found", { status: 400 });
 };
 
-const UpdateProject = () => {
-  return null;
+export const loader = async ({ params }: LoaderFunctionArgs) => {
+  if (!params.projectId) {
+    return redirect("/dashboard");
+  }
+  const project = await getProject(params.projectId);
+  if (!project) {
+    return json("Project not found", { status: 404 });
+  }
+  return json({ project });
 };
-export default UpdateProject;
+
+const EditProject = () => {
+  const data = useLoaderData<typeof loader>();
+  if (typeof data === "string") {
+    // Handle the case where data is a string (e.g., an error message)
+    return <div>Error: {data}</div>;
+  }
+  const project = data.project;
+  return (
+    <div className="mt-4 flex flex-col items-center justify-center gap-12">
+      <h1 className="text-3xl">Projet</h1>
+      <EditableProjectCard project={project} />
+    </div>
+  );
+};
+export default EditProject;

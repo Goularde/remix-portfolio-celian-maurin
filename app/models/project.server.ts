@@ -59,11 +59,11 @@ export const getProject = (projectId: string) => {
   });
 };
 
-export const createProject = async (name: string, description: string) => {
+export const createProject = async (name?: string, description?: string) => {
   return db.project.create({
     data: {
-      name,
-      description,
+      name: name ? name : "New Project",
+      description: description ? description : "Description",
     },
   });
 };

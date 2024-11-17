@@ -2,19 +2,21 @@ import { Form, useFetcher } from "@remix-run/react";
 import EditableTag from "./EditableTag";
 import { Save } from "lucide-react";
 import classNames from "classnames";
+import { SerializeFrom } from "@remix-run/node";
+import { ProjectType } from "~/types/projectType";
 
 type EditableProjectCardProps = {
-  project: {
-    id: string;
-    name: string;
-    description: string;
-    tags?: { id: string; name: string; color: string }[];
-  };
+  project: SerializeFrom<ProjectType>;
+  // project: {
+  //   id: string;
+  //   name: string;
+  //   description: string;
+  //   tags?: { id: string; name: string; color: string }[];
+  // };
 };
 const EditableProjectCard = ({ project }: EditableProjectCardProps) => {
   const createTagFetcher = useFetcher();
   const isAdding = createTagFetcher.formData?.get("_action") === "addTag";
-  const url = new URL(window.location.href).pathname;
   return (
     <div className="flex flex-col p-4 rounded-lg max-w-xs bg-background-light border-2 border-accent justify-between">
       <img
@@ -25,11 +27,7 @@ const EditableProjectCard = ({ project }: EditableProjectCardProps) => {
       <Form
         method="PUT"
         className="mt-4 flex flex-col gap-2"
-        action={
-          url === "/dashboard/new-project"
-            ? "/dashboard/new-project"
-            : `/dashboard/${project.id}`
-        }
+        action={`/dashboard/edit/${project.id}`}
       >
         <input type="hidden" name="projectId" defaultValue={project.id} />
         <input

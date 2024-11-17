@@ -43,7 +43,7 @@ const EditableTag = ({
       />
       <deleteTagFetcher.Form
         method="DELETE"
-        action={`/dashboard/${projectId}`}
+        action={`/dashboard/edit/${projectId}`}
         aria-label={isFailedDeletion ? "Retry" : "Delete"}
         onSubmit={(e) => {
           if (!confirm("Are you sure you want to delete this shelf?")) {
