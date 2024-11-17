@@ -6,6 +6,8 @@ import { createTag, deleteTag } from "~/models/tag.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
+  console.log(formData);
+
   const formatTags = () => {
     const tagIds = formData.getAll("tagId") as string[];
     const tagNames = formData.getAll("tagName") as string[];

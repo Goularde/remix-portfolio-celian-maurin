@@ -1,10 +1,11 @@
 import { useFetcher } from "@remix-run/react";
 import classNames from "classnames";
 import { RotateCcw, X } from "lucide-react";
+import { useEffect } from "react";
 
 type EditableTagProps = {
   tagName: string;
-  color: string;
+  color?: string;
   tagId: string;
   projectId: string;
 };
@@ -16,11 +17,14 @@ const EditableTag = ({
   projectId,
 }: EditableTagProps) => {
   const deleteTagFetcher = useFetcher();
+
   const isDeleteting =
     deleteTagFetcher.formData?.get("_action") === "deleteTag";
   const fetcherData = deleteTagFetcher.data as { error: boolean };
   const isFailedDeletion = fetcherData?.error;
-
+  useEffect(() => {
+    // console.log(deleteTagFetcher.load(`/dashboard/edit/${projectId}`));
+  }, [deleteTagFetcher.data, projectId]);
   return (
     <div
       className={classNames(
@@ -41,21 +45,20 @@ const EditableTag = ({
         className="text-xs leading-3 bg-transparent max-w-16  outline-2 outline-primary"
         defaultValue={tagName}
       />
-      <deleteTagFetcher.Form
-        method="DELETE"
-        action={`/dashboard/edit/${projectId}`}
-        aria-label={isFailedDeletion ? "Retry" : "Delete"}
-        onSubmit={(e) => {
-          if (!confirm("Are you sure you want to delete this shelf?")) {
-            e.preventDefault();
-          }
-        }}
+      <button
+        type="button"
+        onClick={() =>
+          deleteTagFetcher.submit(
+            { _action: "deleteTag", tagId },
+            {
+              method: "delete",
+              action: `/dashboard/edit/${projectId}`,
+            }
+          )
+        }
       >
-        <input type="hidden" name="tagId" value={tagId} />
-        <button type="submit" name="_action" value="deleteTag">
-          {isFailedDeletion ? <RotateCcw size={12} /> : <X size={12} />}
-        </button>
-      </deleteTagFetcher.Form>
+        {isFailedDeletion ? <RotateCcw size={12} /> : <X size={12} />}
+      </button>
     </div>
   );
 };

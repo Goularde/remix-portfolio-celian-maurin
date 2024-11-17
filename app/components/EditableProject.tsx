@@ -28,6 +28,7 @@ const EditableProjectCard = ({ project }: EditableProjectCardProps) => {
         method="PUT"
         className="mt-4 flex flex-col gap-2"
         action={`/dashboard/edit/${project.id}`}
+        id="updateProjectForm"
       >
         <input type="hidden" name="projectId" defaultValue={project.id} />
         <input
@@ -48,23 +49,21 @@ const EditableProjectCard = ({ project }: EditableProjectCardProps) => {
 
         <div className="flex gap-2 mt-4">
           <div className="flex gap-2 flex-wrap">
-            <createTagFetcher.Form
-              method="POST"
-              // action={`/dashboard/${project.id}`}
+            <button
+              type="button"
+              className={classNames(
+                "p-2 w-8 h-8 rounded-full bg-background-light border-2 border-accent hover:scale-110 leading-3 text-center",
+                { "animate-spin": isAdding, disabled: isAdding }
+              )}
+              onClick={() => {
+                createTagFetcher.submit(
+                  { _action: "createTag", projectId: project.id },
+                  { method: "POST" }
+                );
+              }}
             >
-              <input type="hidden" name="projectId" value={project.id} />
-              <button
-                className={classNames(
-                  "p-2 w-8 h-8 rounded-full bg-background-light border-2 border-accent hover:scale-110 leading-3 text-center",
-                  { "animate-spin": isAdding, disabled: isAdding }
-                )}
-                name="_action"
-                value="createTag"
-                type="submit"
-              >
-                +
-              </button>
-            </createTagFetcher.Form>
+              +
+            </button>
             {project.tags?.map((tag) => (
               <EditableTag
                 key={tag.id}
@@ -76,17 +75,18 @@ const EditableProjectCard = ({ project }: EditableProjectCardProps) => {
             ))}
           </div>
         </div>
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            name="_action"
-            value="updateProject"
-            className="p-2 rounded-full bg-background-light border-2 border-accent hover:scale-110 leading-3 text-center"
-          >
-            <Save />
-          </button>
-        </div>
       </Form>
+      <div className="flex justify-end">
+        <button
+          type="submit"
+          name="_action"
+          value="updateProject"
+          className="p-2 rounded-full bg-background-light border-2 border-accent hover:scale-110 leading-3 text-center"
+          form="updateProjectForm"
+        >
+          <Save />
+        </button>
+      </div>
     </div>
   );
 };
