@@ -3,22 +3,12 @@ import { json, redirect, useLoaderData } from "@remix-run/react";
 import EditableProjectCard from "~/components/EditableProject";
 import { getProject, updateProject } from "~/models/project.server";
 import { createTag, deleteTag } from "~/models/tag.server";
+import { formatTags } from "~/utils/misc";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  console.log(formData);
 
-  const formatTags = () => {
-    const tagIds = formData.getAll("tagId") as string[];
-    const tagNames = formData.getAll("tagName") as string[];
-    return tagIds.map((id, index) => {
-      return {
-        id,
-        name: tagNames[index],
-      };
-    });
-  };
-  const tags = formatTags();
+  const tags = formatTags(formData);
   const projectId = formData.get("projectId");
   const projectName = formData.get("projectName");
   const projectDescription = formData.get("projectDescription");
@@ -28,7 +18,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       if (
         typeof projectId === "string" &&
         typeof projectName === "string" &&
-        typeof projectDescription === "string"
+        typeof projectDescription === "string" &&
+        tags
       ) {
         return updateProject(
           projectId,
@@ -79,7 +70,7 @@ const EditProject = () => {
   }
   const project = data.project;
   return (
-    <div className="mt-4 flex flex-col items-center justify-center gap-12">
+    <div className="mt-4 flex flex-col items-center justify-center gap-8">
       <h1 className="text-3xl">Projet</h1>
       <EditableProjectCard project={project} />
     </div>

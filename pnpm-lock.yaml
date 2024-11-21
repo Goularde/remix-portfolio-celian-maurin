@@ -55,7 +55,7 @@ importers:
         specifier: ^6.7.4
         version: 6.21.0(eslint@8.57.1)(typescript@5.6.2)
       autoprefixer:
-        specifier: ^10.4.19
+        specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.47)
       classnames:
         specifier: ^2.5.1

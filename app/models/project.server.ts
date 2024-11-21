@@ -7,6 +7,7 @@ export const updateProject = async (
   tags: {
     id: string;
     name: string;
+    color: string;
   }[]
 ) => {
   tags.forEach(async (tag) => {
@@ -16,6 +17,7 @@ export const updateProject = async (
       },
       data: {
         name: tag.name,
+        color: tag.color,
       },
     });
   });

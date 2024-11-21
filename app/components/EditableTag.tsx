@@ -1,18 +1,17 @@
 import { useFetcher } from "@remix-run/react";
 import classNames from "classnames";
 import { RotateCcw, X } from "lucide-react";
-import { useEffect } from "react";
 
 type EditableTagProps = {
   tagName: string;
-  color?: string;
+  tagColor?: string;
   tagId: string;
   projectId: string;
 };
 
 const EditableTag = ({
   tagName,
-  color,
+  tagColor,
   tagId,
   projectId,
 }: EditableTagProps) => {
@@ -22,9 +21,7 @@ const EditableTag = ({
     deleteTagFetcher.formData?.get("_action") === "deleteTag";
   const fetcherData = deleteTagFetcher.data as { error: boolean };
   const isFailedDeletion = fetcherData?.error;
-  useEffect(() => {
-    // console.log(deleteTagFetcher.load(`/dashboard/edit/${projectId}`));
-  }, [deleteTagFetcher.data, projectId]);
+
   return (
     <div
       className={classNames(
@@ -32,9 +29,12 @@ const EditableTag = ({
       )}
       style={{ display: isDeleteting ? "none" : "flex" }}
     >
-      <span
-        className="h-3 w-3 rounded-full"
-        style={{ backgroundColor: color }}
+      <input
+        required
+        type="color"
+        defaultValue={tagColor ? tagColor : "#7c3aed"}
+        className="cursor-pointer p-0 border-0 outline-none background-transparent border-cyan-500 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch-wrapper]:p-0 w-3 h-3"
+        name="tagColor"
       />
 
       <input type="hidden" name="tagId" value={tagId} />
@@ -42,7 +42,7 @@ const EditableTag = ({
         required
         type="text"
         name="tagName"
-        className="text-xs leading-3 bg-transparent max-w-16  outline-2 outline-primary"
+        className="text-xs leading-3 bg-transparent max-w-16 focus:outline-none focus:border-accent focus:border-2 border-2 border-transparent rounded"
         defaultValue={tagName}
       />
       <button

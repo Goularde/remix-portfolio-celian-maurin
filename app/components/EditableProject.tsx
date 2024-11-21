@@ -68,7 +68,7 @@ const EditableProjectCard = ({ project }: EditableProjectCardProps) => {
               <EditableTag
                 key={tag.id}
                 tagName={tag.name}
-                color={tag.color}
+                tagColor={tag.color}
                 tagId={tag.id}
                 projectId={project.id}
               />

@@ -14,7 +14,7 @@ const ProjectCard = ({
 }: ProjectCardProps) => {
   return (
     <div
-      className="flex flex-col p-4 h-full max-w-xs rounded-lg bg-background-light border-2 border-accent justify-between"
+      className="flex flex-col p-4 max-w-xs rounded-lg bg-background-light border-2 border-accent justify-between "
       style={style}
     >
       {children}

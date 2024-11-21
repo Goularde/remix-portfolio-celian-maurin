@@ -48,7 +48,7 @@ export default function DashboardIndex() {
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-3xl">Bienvenue sur le Portfolio de Goularde</h1>
-      <div className="grid md:grid-cols-4 gap-8 p-12">
+      <div className="flex flex-wrap justify-center gap-12 p-12">
         <div className="justify-self-center self-center bg-background-light rounded-full">
           <Form method="post">
             <button type="submit" name="_action" value="addProject">
