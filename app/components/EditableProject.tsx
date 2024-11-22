@@ -21,17 +21,38 @@ const EditableProjectCard = ({ project }: EditableProjectCardProps) => {
         encType="multipart/form-data"
       >
         <input type="hidden" name="projectId" defaultValue={project.id} />
-        <input type="file" name="projectImage" accept="image/*" />
         <div className="flex justify-center">
-          <img
-            src={
-              project.image?.fileName
-                ? `/img/${project.image.fileName}`
-                : "https://picsum.photos/300/200"
-            }
-            alt="projectImage"
-            className="rounded-md h-auto w-full"
+          <input
+            type="file"
+            name="projectImage"
+            id="projectImage"
+            accept="image/*"
+            className="hidden"
+            onChange={(event) => {
+              const files = event.target.files;
+              if (files && files.length > 0) {
+                const file = files[0];
+                const imgTag = document.getElementById(
+                  "projectImageElement"
+                ) as HTMLImageElement;
+                if (imgTag) {
+                  imgTag.src = URL.createObjectURL(file);
+                }
+              }
+            }}
           />
+          <label htmlFor="projectImage" className="cursor-pointer">
+            <img
+              id="projectImageElement"
+              src={
+                project.image?.fileName
+                  ? `/img/${project.image.fileName}`
+                  : "https://picsum.photos/300/200"
+              }
+              alt="projectImage"
+              className="rounded-md h-auto w-full"
+            />
+          </label>
         </div>
         <input
           type="text"

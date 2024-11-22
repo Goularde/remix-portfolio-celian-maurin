@@ -48,7 +48,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         tags
       ) {
         if (file && file.size > 0) {
-          uploadImage(file.name, file.getFilePath(), projectId);
+          await uploadImage(file.name, file.getFilePath(), projectId);
         }
         return updateProject(
           projectId,

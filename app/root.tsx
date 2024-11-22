@@ -51,7 +51,7 @@ export default function App() {
           <AppNavLink to="dashboard">Dashboard</AppNavLink>
         </ul>
       </nav>
-      <div className="pt-12 w-full mb-12">
+      <div className="pt-12 w-full md:mb-12">
         <Outlet />
       </div>
     </>
