@@ -7,30 +7,32 @@ import { ProjectType } from "~/types/projectType";
 
 type EditableProjectCardProps = {
   project: SerializeFrom<ProjectType>;
-  // project: {
-  //   id: string;
-  //   name: string;
-  //   description: string;
-  //   tags?: { id: string; name: string; color: string }[];
-  // };
 };
 const EditableProjectCard = ({ project }: EditableProjectCardProps) => {
   const createTagFetcher = useFetcher();
   const isAdding = createTagFetcher.formData?.get("_action") === "addTag";
   return (
     <div className="flex flex-col p-4 rounded-lg max-w-xs bg-background-light border-2 border-accent justify-between">
-      <img
-        src="https://picsum.photos/300/200"
-        alt="random"
-        className="rounded-md"
-      />
       <Form
         method="PUT"
         className="mt-4 flex flex-col gap-2"
         action={`/dashboard/edit/${project.id}`}
         id="updateProjectForm"
+        encType="multipart/form-data"
       >
         <input type="hidden" name="projectId" defaultValue={project.id} />
+        <input type="file" name="projectImage" accept="image/*" />
+        <div className="flex justify-center">
+          <img
+            src={
+              project.image?.fileName
+                ? `/img/${project.image.fileName}`
+                : "https://picsum.photos/300/200"
+            }
+            alt="projectImage"
+            className="rounded-md h-auto w-full"
+          />
+        </div>
         <input
           type="text"
           className="text-xl  w-full bg-transparent"
@@ -58,7 +60,7 @@ const EditableProjectCard = ({ project }: EditableProjectCardProps) => {
               onClick={() => {
                 createTagFetcher.submit(
                   { _action: "createTag", projectId: project.id },
-                  { method: "POST" }
+                  { method: "POST", encType: "multipart/form-data" }
                 );
               }}
             >

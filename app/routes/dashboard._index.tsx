@@ -64,9 +64,7 @@ export default function DashboardIndex() {
           return (
             <div key={project.id}>
               <ProjectCard
-                name={project.name}
-                description={project.description}
-                tags={project.tags}
+                project={project}
                 style={
                   isDeletingProject && project.id === deletingProjectId
                     ? { opacity: 0.25 }

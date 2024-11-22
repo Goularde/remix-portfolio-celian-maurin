@@ -20,6 +20,7 @@ model Project {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   tags        Tag[]
+  image       Image?
 }
 
 model Tag {
@@ -29,4 +30,14 @@ model Tag {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   projects  Project[]
+}
+
+model Image {
+  id        String   @id @default(cuid())
+  fileName  String
+  filePath  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId String   @unique
 }

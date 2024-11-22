@@ -53,6 +53,7 @@ const EditableTag = ({
             {
               method: "delete",
               action: `/dashboard/edit/${projectId}`,
+              encType: "multipart/form-data",
             }
           )
         }

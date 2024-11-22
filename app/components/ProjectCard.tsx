@@ -1,17 +1,14 @@
 type ProjectCardProps = {
-  name: string;
-  description: string;
-  tags: { id: string; name: string; color: string }[];
+  project: {
+    image: { fileName: string } | null;
+    name: string;
+    description: string;
+    tags: { id: string; name: string; color: string }[];
+  };
   children?: React.ReactNode;
   style?: React.CSSProperties;
 };
-const ProjectCard = ({
-  name,
-  description,
-  tags,
-  children,
-  style,
-}: ProjectCardProps) => {
+const ProjectCard = ({ project, children, style }: ProjectCardProps) => {
   return (
     <div
       className="flex flex-col p-4 max-w-xs rounded-lg bg-background-light border-2 border-accent justify-between "
@@ -20,16 +17,20 @@ const ProjectCard = ({
       {children}
       <div>
         <img
-          src="https://picsum.photos/300/200"
+          src={
+            project.image?.fileName
+              ? `/img/${project.image.fileName}`
+              : "https://picsum.photos/300/200"
+          }
           alt="random"
           className="rounded-md"
         />
-        <h1 className="text-xl mt-4">{name}</h1>
-        <p className="mt-2 text-gray-400">{description}</p>
+        <h1 className="text-xl mt-4">{project.name}</h1>
+        <p className="mt-2 text-gray-400">{project.description}</p>
       </div>
       <div>
         <ul className="flex gap-2 mt-4 flex-wrap">
-          {tags.map((tag) => (
+          {project.tags.map((tag) => (
             <Tag key={tag.id} text={tag.name} color={tag.color} />
           ))}
         </ul>

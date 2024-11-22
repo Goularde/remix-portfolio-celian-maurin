@@ -22,12 +22,7 @@ export default function Index() {
       <h1 className="text-3xl">Bienvenue sur le Portfolio de Goularde</h1>
       <div className="flex justify-around flex-wrap gap-12 p-12 ">
         {data.projects.map((project) => (
-          <ProjectCard
-            key={project.id}
-            name={project.name}
-            description={project.description}
-            tags={project.tags}
-          />
+          <ProjectCard key={project.id} project={project} />
         ))}
       </div>
     </div>

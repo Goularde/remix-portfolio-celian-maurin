@@ -1,5 +1,5 @@
 import db from "~/db.server";
-
+import { unlink } from "fs";
 export const updateProject = async (
   projectId: string,
   projectName: string,
@@ -31,23 +31,25 @@ export const updateProject = async (
     },
   });
 };
-export const getAllProjects = () => {
-  return db.project.findMany({
+export const getAllProjects = async () => {
+  return await db.project.findMany({
     include: {
       tags: {
         orderBy: {
           name: "asc",
         },
       },
+      image: { select: { fileName: true } },
     },
+
     orderBy: {
       createdAt: "desc",
     },
   });
 };
 
-export const getProject = (projectId: string) => {
-  return db.project.findUnique({
+export const getProject = async (projectId: string) => {
+  return await db.project.findUnique({
     where: {
       id: projectId,
     },
@@ -57,6 +59,7 @@ export const getProject = (projectId: string) => {
           name: "asc",
         },
       },
+      image: { select: { fileName: true } },
     },
   });
 };
@@ -71,7 +74,25 @@ export const createProject = async (name?: string, description?: string) => {
 };
 
 export const deleteProject = async (projectId: string) => {
-  return db.project.delete({
+  const project = await db.project.findUnique({
+    where: {
+      id: projectId,
+    },
+    include: {
+      image: true,
+    },
+  });
+  if (project?.image) {
+    unlink(project.image.filePath, (err) => {
+      if (err) throw err;
+    });
+    await db.image.delete({
+      where: {
+        projectId: projectId,
+      },
+    });
+  }
+  return await db.project.delete({
     where: {
       id: projectId,
     },

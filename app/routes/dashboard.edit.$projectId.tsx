@@ -1,13 +1,39 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  NodeOnDiskFile,
+  unstable_composeUploadHandlers,
+  unstable_createFileUploadHandler,
+  unstable_createMemoryUploadHandler,
+  unstable_parseMultipartFormData,
+} from "@remix-run/node";
 import { json, redirect, useLoaderData } from "@remix-run/react";
 import EditableProjectCard from "~/components/EditableProject";
 import { getProject, updateProject } from "~/models/project.server";
 import { createTag, deleteTag } from "~/models/tag.server";
 import { formatTags } from "~/utils/misc";
-
+import { v4 as uuidv4 } from "uuid";
+import { uploadImage } from "~/models/image.server";
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
+  const formData = await unstable_parseMultipartFormData(
+    request,
+    unstable_composeUploadHandlers(
+      unstable_createFileUploadHandler({
+        filter({ contentType }) {
+          return contentType.includes("image");
+        },
+        directory: "./public/img",
+        maxPartSize: 1024 * 1024 * 10,
+        avoidFileConflicts: false,
+        file({ filename }) {
+          return `${uuidv4()}.${filename.split(".")[1]}`;
+        },
+      }),
+      unstable_createMemoryUploadHandler()
+    )
+  );
 
+  const file = formData.get("projectImage") as NodeOnDiskFile;
   const tags = formatTags(formData);
   const projectId = formData.get("projectId");
   const projectName = formData.get("projectName");
@@ -21,6 +47,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         typeof projectDescription === "string" &&
         tags
       ) {
+        if (file && file.size > 0) {
+          uploadImage(file.name, file.getFilePath(), projectId);
+        }
         return updateProject(
           projectId,
           projectName,

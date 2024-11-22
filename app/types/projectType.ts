@@ -3,4 +3,5 @@ export type ProjectType = {
   name: string;
   description: string;
   tags?: { id: string; name: string; color?: string }[];
+  image: { fileName: string } | null;
 };
